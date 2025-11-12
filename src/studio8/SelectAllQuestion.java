@@ -3,6 +3,10 @@ package studio8;
 import support.cse131.NotYetImplementedException;
 
 public class SelectAllQuestion extends MultipleChoiceQuestion {
+	private String prompt;
+	private String answer;
+	private int points;
+	private String[] choices;
 
 	/**
 	 * Constructor
@@ -12,8 +16,7 @@ public class SelectAllQuestion extends MultipleChoiceQuestion {
 	 * @param choices
 	 */
 	public SelectAllQuestion(String prompt, String answer, String[] choices) {
-		// Hint: 1 point per choice
-		throw new NotYetImplementedException();
+		super(prompt, answer, choices.length, choices);
 	}
 	
 	/**
@@ -21,7 +24,19 @@ public class SelectAllQuestion extends MultipleChoiceQuestion {
 	 * @param String givenAnswer to check for points
 	 */
 	public int checkAnswer(String givenAnswer) {
-		throw new NotYetImplementedException();
+		int pointsEarned = this.getPoints();
+		for (int i = 0; i < super.getChoices().length; i++) {
+			if (super.getAnswer().contains(super.getChoices()[i])) { //Choice is correct
+				if (givenAnswer.contains(super.getChoices()[i]) == false) { //Correct choice was not chosen
+					pointsEarned -= 1;
+				}
+			} else { // Choice is incorrect
+				if (givenAnswer.contains(super.getChoices()[i])) { //Incorrect choice was chosen
+					pointsEarned -= 1;
+				}
+			}
+		}
+		return pointsEarned;
 	}
 
 	/**
@@ -67,6 +82,12 @@ public class SelectAllQuestion extends MultipleChoiceQuestion {
 	}	
 	
 	public static void main(String[] args) {	
-		
+		String[] testChoices = {"Bread", "Cake", "Apple", "Banana"};
+		Question testQ = new SelectAllQuestion("What has gluten?", "Bread, Cake", testChoices);
+		testQ.displayPrompt();
+		System.out.println(testQ.checkAnswer("Banana, Apple"));
+		System.out.println(testQ.checkAnswer("Apple"));
+		System.out.println(testQ.checkAnswer("Cake"));
+		System.out.println(testQ.checkAnswer("Cake, Bread"));
 	}
-}
+	}
